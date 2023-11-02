@@ -22,45 +22,45 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "movie_id")
-    private String movieId;
+    private String MovieId;
     @Column(name = "title")
-    private String title;
+    private String Title;
     @Column(name = "year")
-    private String year;
+    private String Year;
     @Column(name = "runtime")
-    private String runtime;
+    private String Runtime;
     @Column(name = "genre")
-    private String genre;
+    private String Genre;
     @Column(name = "director")
-    private String director;
+    private String Director;
     @Column(name = "writer")
-    private String writer;
+    private String Writer;
     @Column(name = "actors")
-    private String actors;
+    private String Actors;
     @Column(name = "plot")
-    private String plot;
+    private String Plot;
     @Column(name = "language")
-    private String language;
+    private String Language;
     @Column(name = "poster")
-    private String poster;
+    private String Poster;
     @Column(name = "type")
-    private String type;
+    private String Type;
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Timestamp CreatedAt;
 
     public Movie(AddMovie request) {
-        this.movieId = MultipleUtils.randomString();
-        this.title = request.getTitle();
-        this.year = request.getYear();
-        this.runtime = request.getRuntime();
-        this.genre = request.getGenre();
-        this.director = request.getDirector();
-        this.writer = request.getWriter();
-        this.actors = request.getActors();
-        this.plot = request.getPlot();
-        this.language = request.getLanguage();
-        this.poster = request.getPoster();
-        this.type = request.getType();
-        this.createdAt = DateUtils.getCurrentTimeStamp();
+        this.MovieId = MultipleUtils.randomString();
+        this.Title = request.getTitle();
+        this.Year = request.getYear();
+        this.Runtime = request.getRuntime();
+        this.Genre = request.getGenre();
+        this.Director = request.getDirector();
+        this.Writer = request.getWriter();
+        this.Actors = request.getActors();
+        this.Plot = request.getPlot();
+        this.Language = request.getLanguage();
+        this.Poster = request.getPoster();
+        this.Type = request.getType();
+        this.CreatedAt = DateUtils.getCurrentTimeStamp();
     }
 }

@@ -2,15 +2,13 @@ package et.com.qena.theater.controllers;
 
 import et.com.qena.theater.dtos.requests.AddMovie;
 import et.com.qena.theater.dtos.responses.MovieResponse;
+import et.com.qena.theater.dtos.responses.MovieSearchResponse;
 import et.com.qena.theater.services.ITheaterService;
 import et.com.qena.theater.utils.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,5 +27,10 @@ public class TheaterController {
     public GenericResponse<MovieResponse> addMovie(@RequestBody AddMovie request)
     {
         return theaterService.addMovie(request);
+    }
+    @GetMapping("/movies")
+    public MovieSearchResponse getMovies(@RequestParam("title") String title,@RequestParam("year") String year,@RequestParam("page") int page,@RequestParam("per_page") int per_page)
+    {
+        return theaterService.searchMovie(title,year,page,per_page);
     }
 }

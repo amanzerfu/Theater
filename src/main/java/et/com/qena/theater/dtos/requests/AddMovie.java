@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddMovie {
-    private String title;
+    private String Title;
     private String year;
-    private String runtime;
-    private String genre;
-    private String director;
-    private String writer;
-    private String actors;
-    private String plot;
-    private String language;
-    private String poster;
-    private String type;
+    private String Runtime;
+    private String Genre;
+    private String Director;
+    private String Writer;
+    private String Actors;
+    private String Plot;
+    private String Language;
+    private String Poster;
+    private String Type;
 }
