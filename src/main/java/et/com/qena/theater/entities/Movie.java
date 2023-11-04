@@ -1,6 +1,7 @@
 package et.com.qena.theater.entities;
 
 import et.com.qena.theater.dtos.requests.AddMovie;
+import et.com.qena.theater.dtos.requests.NewMovie;
 import et.com.qena.theater.utils.DateUtils;
 import et.com.qena.theater.utils.MultipleUtils;
 import lombok.AllArgsConstructor;
@@ -18,9 +19,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Table(name = "tbl_movie")
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Column(name = "movie_id")
     private String MovieId;
     @Column(name = "title")
@@ -48,8 +50,8 @@ public class Movie {
     @Column(name = "created_at")
     private Timestamp CreatedAt;
 
-    public Movie(AddMovie request) {
-        this.MovieId = MultipleUtils.randomString();
+    public Movie(NewMovie request) {
+        this.MovieId = MultipleUtils.randomGenerateId();
         this.Title = request.getTitle();
         this.Year = request.getYear();
         this.Runtime = request.getRuntime();
@@ -63,4 +65,5 @@ public class Movie {
         this.Type = request.getType();
         this.CreatedAt = DateUtils.getCurrentTimeStamp();
     }
+
 }

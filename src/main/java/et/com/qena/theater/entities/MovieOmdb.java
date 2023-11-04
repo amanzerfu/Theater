@@ -13,50 +13,50 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class MovieOmdb {
     @JsonProperty("Title")
-    public String title;
+    public String Title;
     @JsonProperty("Year")
-    public String year;
+    public String Year;
     @JsonProperty("Rated")
-    public String rated;
+    public String Rated;
     @JsonProperty("Released")
     public String released;
     @JsonProperty("Runtime")
-    public String runtime;
+    public String Runtime;
     @JsonProperty("Genre")
-    public String genre;
+    public String Genre;
     @JsonProperty("Director")
-    public String director;
+    public String Director;
     @JsonProperty("Writer")
-    public String writer;
+    public String Writer;
     @JsonProperty("Actors")
-    public String actors;
+    public String Actors;
     @JsonProperty("Plot")
-    public String plot;
+    public String Plot;
     @JsonProperty("Language")
-    public String language;
+    public String Language;
     @JsonProperty("Country")
-    public String country;
+    public String Country;
     @JsonProperty("Awards")
-    public String awards;
+    public String Awards;
     @JsonProperty("Poster")
-    public String poster;
+    public String Poster;
     @JsonProperty("Ratings")
-    public ArrayList<Rating> ratings;
+    public ArrayList<Rating> Ratings;
     @JsonProperty("Metascore")
-    public String metascore;
+    public String Metascore;
     public String imdbRating;
     public String imdbVotes;
     public String imdbID;
     @JsonProperty("Type")
-    public String type;
+    public String Type;
     @JsonProperty("DVD")
-    public String dVD;
+    public String DVD;
     @JsonProperty("BoxOffice")
-    public String boxOffice;
+    public String BoxOffice;
     @JsonProperty("Production")
-    public String production;
+    public String Production;
     @JsonProperty("Website")
-    public String website;
+    public String Website;
     @JsonProperty("Response")
-    public String response;
+    public String Response;
 }

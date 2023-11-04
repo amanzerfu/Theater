@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(
-		title = "Theater Web App service",
+		title = "Theater Web App Micro service",
 		version = "1.0",
 		contact = @Contact(
 				name = "Theater",

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddMovie {
     private String Title;
-    private String year;
+    private String Year;
     private String Runtime;
     private String Genre;
     private String Director;
@@ -19,4 +19,21 @@ public class AddMovie {
     private String Language;
     private String Poster;
     private String Type;
+
+    @Override
+    public String toString() {
+        return "AddMovie{" +
+                "Title='" + Title + '\'' +
+                ", Year='" + Year + '\'' +
+                ", Runtime='" + Runtime + '\'' +
+                ", Genre='" + Genre + '\'' +
+                ", Director='" + Director + '\'' +
+                ", Writer='" + Writer + '\'' +
+                ", Actors='" + Actors + '\'' +
+                ", Plot='" + Plot + '\'' +
+                ", Language='" + Language + '\'' +
+                ", Poster='" + Poster + '\'' +
+                ", Type='" + Type + '\'' +
+                '}';
+    }
 }

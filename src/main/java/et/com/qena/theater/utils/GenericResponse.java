@@ -1,27 +1,28 @@
 package et.com.qena.theater.utils;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-@Getter
-@Setter
-@NoArgsConstructor
-public class GenericResponse <A>{
-    private int responseCode;
-    private String responseMessage;
-    private A data;
-    private int totalPages;
+public class GenericResponse<A> {
+    private String status;
+    private int totalResult;
+    private int page;
+    private int per_page;
+    private A date;
 
-    public GenericResponse(int responseCode, String responseMessage, A data) {
-        this.responseCode = responseCode;
-        this.responseMessage = responseMessage;
-        this.data = data;
+    public GenericResponse(String status, int totalResult, int page, int per_page, A date) {
+        this.status = status;
+        this.totalResult = totalResult;
+        this.page = page;
+        this.per_page = per_page;
+        this.date = date;
     }
 
-    public GenericResponse(int responseCode, String responseMessage, A data, int totalPages) {
-        this.responseCode = responseCode;
-        this.responseMessage = responseMessage;
-        this.data = data;
-        this.totalPages = totalPages;
+    public GenericResponse(A date) {
+        this.date = date;
+    }
+
+    public GenericResponse(String status) {
+        this.status = status;
     }
 }

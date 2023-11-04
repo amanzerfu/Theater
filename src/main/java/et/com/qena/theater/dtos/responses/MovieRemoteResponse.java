@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieRemoteResponse {
-    public String title;
-    public String year;
+    public String Title;
+    public String Year;
     public String imdbID;
-    public String type;
-    public String poster;
+    public String Type;
+    public String Poster;
 }

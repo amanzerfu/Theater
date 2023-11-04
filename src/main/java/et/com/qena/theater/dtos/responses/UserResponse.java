@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieListResponse {
-    public String movieId;
-    public String Title;
-    public String Year;
-    public String Type;
-    public String Poster;
+public class UserResponse {
+    private String userId;
+    private String status;
 }
