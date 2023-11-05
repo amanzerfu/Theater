@@ -20,20 +20,4 @@ public class AddMovie {
     private String Poster;
     private String Type;
 
-    @Override
-    public String toString() {
-        return "AddMovie{" +
-                "Title='" + Title + '\'' +
-                ", Year='" + Year + '\'' +
-                ", Runtime='" + Runtime + '\'' +
-                ", Genre='" + Genre + '\'' +
-                ", Director='" + Director + '\'' +
-                ", Writer='" + Writer + '\'' +
-                ", Actors='" + Actors + '\'' +
-                ", Plot='" + Plot + '\'' +
-                ", Language='" + Language + '\'' +
-                ", Poster='" + Poster + '\'' +
-                ", Type='" + Type + '\'' +
-                '}';
-    }
 }

@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie,Long> {
 
-//   @Query(value = "SELECT m FROM Movie m where m.title = :title AND m.year = :year")
+   @Query(value = "SELECT m FROM Movie m")
     Page<Movie> findByTitleAndYear(String title, String year, Pageable pageable);
+    @Query(value = "SELECT m FROM Movie m.MovieId = :id")
+    Movie findByMovieId(String id);
 }

@@ -11,30 +11,35 @@ import et.com.qena.theater.utils.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class TheaterController {
     private final ITheaterService theaterService;
 
-    public TheaterController(ITheaterService theaterService) {
-        this.theaterService = theaterService;
-    }
-//    @Operation(summary = "Add Movie Service")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200",description = "Movie Added successfully."),
-//            @ApiResponse(responseCode = "400",description = "There was an error while Adding Movie.")
-//    })
+
+    @Operation(summary = "Add Movie Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Movie Added successfully."),
+            @ApiResponse(responseCode = "400",description = "There was an error while Adding Movie.")
+    })
     @PostMapping("/movies")
-    public MovieResponse addMovie(@RequestBody NewMovie request)
+    public MovieResponse addMovie(@RequestBody NewMovie movie)
     {
-        return theaterService.addMovie(request);
+        return theaterService.addMovie(movie);
     }
     @GetMapping("/movies")
-    public MovieSearchResponse getMovies(@RequestParam("title") String title,@RequestParam("year") String year,@RequestParam("page") int page,@RequestParam("per_page") int per_page)
+    public GenericResponse getMovies(@RequestParam("title") String title,@RequestParam("year") String year,@RequestParam("page") int page,@RequestParam("per_page") int per_page)
     {
         return theaterService.searchMovie(title,year,page,per_page);
+    }
+   @GetMapping("/movies/{id}")
+    public MovieGetResponse getMovies(@PathVariable String id)
+    {
+        return theaterService.getMovie(id);
     }
 
     @PostMapping("/users")

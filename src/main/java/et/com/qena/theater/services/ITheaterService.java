@@ -11,11 +11,13 @@ import et.com.qena.theater.utils.Response;
 public interface  ITheaterService {
     MovieResponse addMovie(NewMovie request);
 
-    MovieSearchResponse searchMovie(String title, String year, int page, int perPage);
+    GenericResponse searchMovie(String title, String year, int page, int perPage);
 
     UserResponse addUser(AddUser request);
 
     ReviewsResponse addReview(AddReviews request);
 
     GenericResponse getReviews(String userId, int page, int perPage);
+
+    MovieGetResponse getMovie(String id);
 }

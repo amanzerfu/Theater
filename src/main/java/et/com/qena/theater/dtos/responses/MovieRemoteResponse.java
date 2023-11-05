@@ -1,16 +1,19 @@
 package et.com.qena.theater.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieRemoteResponse {
-    public String Title;
-    public String Year;
-    public String imdbID;
-    public String Type;
-    public String Poster;
+        @JsonProperty("Search")
+        public List<Search> search;
+        public String totalResults;
+        @JsonProperty("Response")
+        public String response;
 }
