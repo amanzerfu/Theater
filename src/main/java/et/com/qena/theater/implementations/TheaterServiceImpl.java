@@ -47,6 +47,7 @@ public class TheaterServiceImpl implements ITheaterService {
     @Override
     public MovieResponse addMovie(NewMovie request) {
         try {
+            log.info("Adding movie, {}", request);
             Movie movie = movieRepository.save(new Movie(request));
             return new MovieResponse(movie.getMovieId(), "success");
         } catch (Exception e) {
@@ -67,16 +68,19 @@ public class TheaterServiceImpl implements ITheaterService {
         log.info("values  {}", response.getBody());
         List<Search> searchList = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, perPage);
-//        Page<Movie> movieList = movieRepository.findByTitleAndYear("Guardians of the Galaxy Vol. 2", "2017", pageable);
-        Page<Movie> movieList = movieRepository.findAll(pageable);
+        Page<Movie> movieList = movieRepository.findByTitleAndYear(title, year, pageable);
+
         if (!movieList.isEmpty()) {
-            combined.addAll(movieList.stream().toList());
-            log.info("Model {}", movieList.stream().toList());
+            List<MovieListResponse> movieListResponses = new ArrayList<>();
+            for (Movie movie : movieList) {
+                movieListResponses.add(new MovieListResponse(movie));
+            }
+            combined.addAll(movieListResponses);
         }
-//        if (response.getBody().response.equalsIgnoreCase("True")) {
-//            searchList = response.getBody().search;
-//            combined.addAll(searchList);
-//        }
+        if (response.getBody().response.equalsIgnoreCase("True")) {
+            searchList = response.getBody().search;
+            combined.addAll(searchList);
+        }
         if (!combined.isEmpty()) {
             return new GenericResponse("success!", movieList.getSize(), page, perPage, combined);
         }
@@ -145,30 +149,31 @@ public class TheaterServiceImpl implements ITheaterService {
     }
 
     @Override
-    public MovieGetResponse getMovie(String id) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        List<Object> combined = new ArrayList<>();
-//        ResponseEntity<MovieRemoteResponse> response = restTemplate.getForEntity(
-//                theaterConfig.getOmdb_api_url() + "?apikey="
-//                        + theaterConfig.getOmdb_api_key() + "&i="
-//                        + id,
-//                MovieRemoteResponse.class);
-//        log.info("values  {}", response.getBody());
-//        List<Search> searchList = new ArrayList<>();
-//
-//        Movie movieList = movieRepository.findByMovieId(id);
-//        if (movieList !=null) {
-//            return new MovieGetResponse("success!",)
-//        }
-////        if (response.getBody().response.equalsIgnoreCase("True")) {
-////            searchList = response.getBody().search;
-////            combined.addAll(searchList);
-////        }
-//        if (!combined.isEmpty()) {
-//            return new MovieGetResponse("success!", movieList.getSize(), page, perPage, combined);
-//        }
-        //working on it
-        return new MovieGetResponse("nooo","", "0", "0", "0", "null");
+    public ResponseEntity<?> getMovie(String id) {
+        RestTemplate restTemplate = new RestTemplate();
+        Object tobeReturned = new Object();
+        ResponseEntity<MovieGetRemoteResponse> response = restTemplate.getForEntity(
+                theaterConfig.getOmdb_api_url() + "?apikey="
+                        + theaterConfig.getOmdb_api_key() + "&i="
+                        + id,
+                MovieGetRemoteResponse.class);
+        log.info("values  {}", response.getBody());
+        Search searchList = null;
 
+        Movie movieList = movieRepository.findByMovieId(id);
+        if (movieList != null) {
+            return ResponseEntity.ok(new MovieGetResponse("success!", movieList.getMovieId(), movieList.getTitle(), movieList.getYear(), movieList.getType(), movieList.getPoster()));
+        }
+        if (movieList == null && response.getBody().response.equalsIgnoreCase("True")) {
+            tobeReturned = new Search(response.getBody().title,
+                    response.getBody().year,
+                    response.getBody().imdbID,
+                    response.getBody().type,
+                    response.getBody().poster);
+        }
+        if (tobeReturned != null) {
+            return ResponseEntity.ok(tobeReturned);
+        }
+        return null;
     }
 }

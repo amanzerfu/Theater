@@ -7,6 +7,7 @@ import et.com.qena.theater.dtos.requests.NewMovie;
 import et.com.qena.theater.dtos.responses.*;
 import et.com.qena.theater.utils.GenericResponse;
 import et.com.qena.theater.utils.Response;
+import org.springframework.http.ResponseEntity;
 
 public interface  ITheaterService {
     MovieResponse addMovie(NewMovie request);
@@ -19,5 +20,5 @@ public interface  ITheaterService {
 
     GenericResponse getReviews(String userId, int page, int perPage);
 
-    MovieGetResponse getMovie(String id);
+    ResponseEntity<?> getMovie(String id);
 }

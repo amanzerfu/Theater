@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,7 +38,7 @@ public class TheaterController {
         return theaterService.searchMovie(title,year,page,per_page);
     }
    @GetMapping("/movies/{id}")
-    public MovieGetResponse getMovies(@PathVariable String id)
+    public ResponseEntity<?> getMovie(@PathVariable String id)
     {
         return theaterService.getMovie(id);
     }
