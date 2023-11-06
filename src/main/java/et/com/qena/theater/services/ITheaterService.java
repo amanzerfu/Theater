@@ -20,5 +20,5 @@ public interface  ITheaterService {
 
     GenericResponse getReviews(String userId, int page, int perPage);
 
-    ResponseEntity<?> getMovie(String id);
+    MovieDTOResponse getMovie(String id);
 }

@@ -24,39 +24,62 @@ public class TheaterController {
 
     @Operation(summary = "Add Movie Service")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Movie Added successfully."),
-            @ApiResponse(responseCode = "400",description = "There was an error while Adding Movie.")
+            @ApiResponse(responseCode = "200", description = "Movie Added successfully."),
+            @ApiResponse(responseCode = "500", description = "There was an error while Adding Movie.")
     })
     @PostMapping("/movies")
-    public MovieResponse addMovie(@RequestBody NewMovie movie)
-    {
+    public MovieResponse addMovie(@RequestBody NewMovie movie) {
         return theaterService.addMovie(movie);
     }
+
+    @Operation(summary = "Search Movie using title and year  Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie search successfully."),
+            @ApiResponse(responseCode = "500", description = "There was an error while searching Movie.")
+    })
     @GetMapping("/movies")
-    public GenericResponse getMovies(@RequestParam("title") String title,@RequestParam("year") String year,@RequestParam("page") int page,@RequestParam("per_page") int per_page)
-    {
-        return theaterService.searchMovie(title,year,page,per_page);
+    public GenericResponse getMovies(@RequestParam("title") String title, @RequestParam("year") String year, @RequestParam("page") int page, @RequestParam("per_page") int per_page) {
+        return theaterService.searchMovie(title, year, page, per_page);
     }
-   @GetMapping("/movies/{id}")
-    public ResponseEntity<?> getMovie(@PathVariable String id)
-    {
+
+    @Operation(summary = "Search Movie using id  Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie search successfully."),
+            @ApiResponse(responseCode = "500", description = "There was an error while searching Movie.")
+    })
+    @GetMapping("/movies/{id}")
+    public MovieDTOResponse getMovie(@PathVariable String id) {
         return theaterService.getMovie(id);
     }
 
+    @Operation(summary = "Search Movie using title and year  Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie search successfully."),
+            @ApiResponse(responseCode = "500", description = "There was an error while searching Movie.")
+    })
     @PostMapping("/users")
-    public UserResponse addMovie(@RequestBody AddUser request)
-    {
+    public UserResponse addMovie(@RequestBody AddUser request) {
         return theaterService.addUser(request);
     }
+
+    @Operation(summary = "Add reviews   Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Review Added successfully."),
+            @ApiResponse(responseCode = "500", description = "There was an error while Adding Review.")
+    })
     @PostMapping("/reviews")
-    public ReviewsResponse addReviews(@RequestBody AddReviews request)
-    {
+    public ReviewsResponse addReviews(@RequestBody AddReviews request) {
         return theaterService.addReview(request);
     }
+
+    @Operation(summary = "get review by user Service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Review get successful."),
+            @ApiResponse(responseCode = "500", description = "There was an error while getting Review.")
+    })
     @GetMapping("/reviews/{userId}")
-    public GenericResponse getReviews(@PathVariable String userId, @RequestParam("page") int page, @RequestParam("per_page") int per_page)
-    {
-        return theaterService.getReviews(userId,page,per_page);
+    public GenericResponse getReviews(@PathVariable String userId, @RequestParam("page") int page, @RequestParam("per_page") int per_page) {
+        return theaterService.getReviews(userId, page, per_page);
 
     }
 }

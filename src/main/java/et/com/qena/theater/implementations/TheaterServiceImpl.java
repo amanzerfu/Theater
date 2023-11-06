@@ -1,13 +1,12 @@
 package et.com.qena.theater.implementations;
 
 import et.com.qena.theater.configs.TheaterConfig;
-import et.com.qena.theater.dtos.requests.AddMovie;
 import et.com.qena.theater.dtos.requests.AddReviews;
 import et.com.qena.theater.dtos.requests.AddUser;
 import et.com.qena.theater.dtos.requests.NewMovie;
 import et.com.qena.theater.dtos.responses.*;
 import et.com.qena.theater.entities.Movie;
-import et.com.qena.theater.entities.MovieOmdb;
+
 import et.com.qena.theater.entities.Reviews;
 import et.com.qena.theater.entities.User;
 import et.com.qena.theater.repositories.IReviewsRepository;
@@ -15,7 +14,7 @@ import et.com.qena.theater.repositories.IUserRepository;
 import et.com.qena.theater.repositories.MovieRepository;
 import et.com.qena.theater.services.ITheaterService;
 import et.com.qena.theater.utils.GenericResponse;
-import et.com.qena.theater.utils.Response;
+
 import et.com.qena.theater.validations.RegistrationValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +41,11 @@ public class TheaterServiceImpl implements ITheaterService {
     private final IUserRepository userRepository;
     private final IReviewsRepository reviewsRepository;
 
+    /**
+     * create new movie service
+     * @param request gets request from the user
+     * @return and return movie id and success status if complete adding or throw error if not.
+     */
     @Override
     public MovieResponse addMovie(NewMovie request) {
         try {
@@ -55,10 +57,19 @@ public class TheaterServiceImpl implements ITheaterService {
         }
     }
 
+    /**
+     *  get Movie using title and year from local database and remote db concatinate and return paginated result
+     * @param title title of movie
+     * @param year year of move
+     * @param page starting page example 0,1
+     * @param perPage number of elements per page example 2 or 10
+     * @return return results from both db
+     */
     @Override
     public GenericResponse searchMovie(String title, String year, int page, int perPage) {
         RestTemplate restTemplate = new RestTemplate();
-        List<Object> combined = new ArrayList<>();
+        List<MovieDTOResponse> combined = new ArrayList<>();
+        MovieDTOResponse movieDTOResponse = null;
         ResponseEntity<MovieRemoteResponse> response = restTemplate.getForEntity(
                 theaterConfig.getOmdb_api_url() + "?apikey="
                         + theaterConfig.getOmdb_api_key() + "&s="
@@ -71,22 +82,37 @@ public class TheaterServiceImpl implements ITheaterService {
         Page<Movie> movieList = movieRepository.findByTitleAndYear(title, year, pageable);
 
         if (!movieList.isEmpty()) {
-            List<MovieListResponse> movieListResponses = new ArrayList<>();
             for (Movie movie : movieList) {
-                movieListResponses.add(new MovieListResponse(movie));
+                movieDTOResponse = new MovieDto("success", movie.getMovieId());
+                movieDTOResponse.title = movie.getTitle();
+                movieDTOResponse.year = movie.getYear();
+                movieDTOResponse.poster = movie.getPoster();
+                movieDTOResponse.type = movie.getType();
+                combined.add(movieDTOResponse);
             }
-            combined.addAll(movieListResponses);
         }
         if (response.getBody().response.equalsIgnoreCase("True")) {
             searchList = response.getBody().search;
-            combined.addAll(searchList);
+            for (Search movie : searchList) {
+                movieDTOResponse = new SearchDto(movie.imdbID);
+                movieDTOResponse.title = movie.title;
+                movieDTOResponse.year = movie.year;
+                movieDTOResponse.poster = movie.poster;
+                movieDTOResponse.type = movie.type;
+                combined.add(movieDTOResponse);
+            }
         }
         if (!combined.isEmpty()) {
             return new GenericResponse("success!", movieList.getSize(), page, perPage, combined);
         }
-        return new GenericResponse("nooo", 0, 0, 0, null);
+        return new GenericResponse("Not found", 0, 0, 0, null);
     }
 
+    /**
+     * Add user service
+     * @param request valid username and email from user
+     * @return return success message
+     */
     @Override
     public UserResponse addUser(AddUser request) {
         if (RegistrationValidation.isValidLength(request.getUsername(), 6, 30)) {
@@ -94,6 +120,7 @@ public class TheaterServiceImpl implements ITheaterService {
                 if (RegistrationValidation.isValidEmail(request.getEmail())) {
                     List<User> users = userRepository.findUserByUserNameOrEmail(request.getUsername(), request.getEmail());
                     if (users.isEmpty()) {
+                        log.info("Adding user, {}", request);
                         User user = userRepository.save(new User(request.getUsername(), request.getEmail()));
                         return new UserResponse(user.getUserId(), "success!");
                     }
@@ -106,6 +133,12 @@ public class TheaterServiceImpl implements ITheaterService {
         return new UserResponse(null, "invalid username ...use min 6 or max 30 character for username");
     }
 
+    /**
+     * Add review service
+     * @param request get valid request
+     * @return return success message if created
+     */
+
     @Override
     public ReviewsResponse addReview(AddReviews request) {
         User user = userRepository.findByUserId(request.getUserId());
@@ -113,6 +146,7 @@ public class TheaterServiceImpl implements ITheaterService {
             if (request.getRating() > 0) {
                 if (request.getRating() < 0 || request.getRating() > 10) {
                     try {
+                        log.info("Adding review, {}", request);
                         Reviews reviews = reviewsRepository.save(new Reviews(request));
                         return new ReviewsResponse("success", reviews.getReviewId());
                     } catch (Exception e) {
@@ -126,6 +160,13 @@ public class TheaterServiceImpl implements ITheaterService {
         return new ReviewsResponse("user not found", null);
     }
 
+    /**
+     * get reviews service filtered by user id
+     * @param userId user id to be filtered
+     * @param page start page number
+     * @param perPage item per page
+     * @return return filtered values
+     */
     @Override
     public GenericResponse getReviews(String userId, int page, int perPage) {
         User user = userRepository.findByUserId(userId);
@@ -148,32 +189,43 @@ public class TheaterServiceImpl implements ITheaterService {
         return new GenericResponse("user not found", 0, 0, 0, null);
     }
 
+    /**
+     * get movies from both local and remote db using movie id
+     * @param id this is movie ID
+     * @return return movie if available
+     */
     @Override
-    public ResponseEntity<?> getMovie(String id) {
+    public MovieDTOResponse getMovie(String id) {
         RestTemplate restTemplate = new RestTemplate();
         Object tobeReturned = new Object();
+        MovieDTOResponse movieDTOResponse = null;
         ResponseEntity<MovieGetRemoteResponse> response = restTemplate.getForEntity(
                 theaterConfig.getOmdb_api_url() + "?apikey="
                         + theaterConfig.getOmdb_api_key() + "&i="
                         + id,
                 MovieGetRemoteResponse.class);
         log.info("values  {}", response.getBody());
-        Search searchList = null;
 
         Movie movieList = movieRepository.findByMovieId(id);
         if (movieList != null) {
-            return ResponseEntity.ok(new MovieGetResponse("success!", movieList.getMovieId(), movieList.getTitle(), movieList.getYear(), movieList.getType(), movieList.getPoster()));
+            movieDTOResponse = new MovieDto("success", movieList.getMovieId());
+            movieDTOResponse.title = movieList.getTitle();
+            movieDTOResponse.year = movieList.getYear();
+            movieDTOResponse.poster = movieList.getPoster();
+            movieDTOResponse.type = movieList.getType();
+            return movieDTOResponse;
         }
         if (movieList == null && response.getBody().response.equalsIgnoreCase("True")) {
-            tobeReturned = new Search(response.getBody().title,
-                    response.getBody().year,
-                    response.getBody().imdbID,
-                    response.getBody().type,
-                    response.getBody().poster);
+            movieDTOResponse = new SearchDto(response.getBody().imdbID);
+            movieDTOResponse.title = response.getBody().title;
+            movieDTOResponse.year = response.getBody().year;
+            movieDTOResponse.poster = response.getBody().poster;
+            movieDTOResponse.type = response.getBody().type;
+
         }
-        if (tobeReturned != null) {
-            return ResponseEntity.ok(tobeReturned);
+        if (movieDTOResponse != null) {
+            return movieDTOResponse;
         }
-        return null;
+        return new MovieDto("Movie not found using this Id", null);
     }
 }
