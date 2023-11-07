@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+   postgres:
+    image: postgres:15.4-alpine
+    container_name: postgres
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+
+   theater-challenge:
+    image: theater-challenge
+    container_name: theater-challenge
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/theater
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    ports:
+      - 9999:9999
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+ 
+volumes:
+  postgres-data:
+    name: postgres-data
